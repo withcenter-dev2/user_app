@@ -48,10 +48,13 @@ class _LoginScreenState extends State<LoginScreen> {
               size: 50,
               color: Colors.blue,
             ),
+            const SizedBox(
+              height: 20.0,
+            ),
             const Text('Welcome',
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
             const Text('Sign in to continue',
-                style: TextStyle(fontSize: 15, color: Colors.grey)),
+                style: TextStyle(fontSize: 15, color: Colors.black54)),
             const SizedBox(height: 50.0),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50.0),
@@ -82,6 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   width: 220.0,
                   child: ElevatedButton(
+                    // ignore: avoid_print
                     onPressed: () => {print('Authenticate credentials')},
                     style: ButtonStyle(
                         padding: MaterialStateProperty.all<EdgeInsets>(
@@ -118,10 +122,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                   const TextSpan(text: 'Forgot password? Recover '),
                   TextSpan(
-                      text: 'here',
+                      text: 'here.',
                       style: const TextStyle(color: Colors.red),
                       recognizer: TapGestureRecognizer()
                         ..onTap =
+                            // ignore: avoid_print
                             () => {print('Go to password recovery page.')}),
                 ]))
           ],
