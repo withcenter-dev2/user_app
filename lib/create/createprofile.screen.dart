@@ -9,6 +9,29 @@ class CreateProfileScreen extends StatefulWidget {
 }
 
 class _CreateProfileScreenState extends State<CreateProfileScreen> {
+  List<String> months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+
+  List<String> days = List.generate(31, (index) {
+    int result;
+    result = index + 1;
+    return '$result';
+  });
+
+  List<String> years = ['2020', '2021', '2022'];
+
   @override
   build(context) {
     return Scaffold(
@@ -118,64 +141,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                DropdownButton(
-                                  value: 'January',
-                                  hint: const Text('Month'),
-                                  items: <String>[
-                                    'January',
-                                    'February',
-                                    'March',
-                                    'April',
-                                    'May',
-                                    'June',
-                                    'July',
-                                    'August',
-                                    'September',
-                                    'October',
-                                    'November',
-                                    'December'
-                                  ].map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(
-                                        value,
-                                      ),
-                                    );
-                                  }).toList(),
-                                  // ignore: avoid_print
-                                  onChanged: (value) => print(value),
-                                ),
-                                DropdownButton(
-                                  value: 'Day',
-                                  items: <String>[
-                                    'Day',
-                                  ].map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(
-                                        value,
-                                      ),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) => {},
-                                ),
-                                DropdownButton(
-                                  value: 'Year',
-                                  items: <String>[
-                                    'Year',
-                                  ].map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(
-                                        value,
-                                      ),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) => {},
-                                )
+                                MyDropDownButton(list: months, hint: 'Month'),
+                                MyDropDownButton(list: days, hint: 'Day'),
+                                MyDropDownButton(list: years, hint: 'Year')
                               ],
                             ))
                       ],
@@ -272,6 +240,30 @@ class MyTextField extends StatelessWidget {
               ),
             ))
       ],
+    );
+  }
+}
+
+class MyDropDownButton extends StatelessWidget {
+  final List<String> list;
+  final String hint;
+  const MyDropDownButton({super.key, required this.list, required this.hint});
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton(
+      value: null,
+      hint: Text(hint),
+      items: list.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(
+            value,
+          ),
+        );
+      }).toList(),
+      // ignore: avoid_print
+      onChanged: (value) => print(value),
     );
   }
 }
