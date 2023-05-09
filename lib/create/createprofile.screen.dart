@@ -69,87 +69,28 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text('First Name',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(
-                            width: 230.0,
-                            child: TextField(
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                hintText: 'First Name',
-                              ),
-                            ))
-                      ],
-                    ),
+                    const MyTextField(
+                        text: 'First Name',
+                        hintText: 'First Name',
+                        obscureText: false),
                     const SizedBox(height: 15.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text('Last Name',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(
-                            width: 230.0,
-                            child: TextField(
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                hintText: 'Last Name',
-                              ),
-                            ))
-                      ],
-                    ),
+                    const MyTextField(
+                        text: 'Last Name',
+                        hintText: 'Last Name',
+                        obscureText: false),
                     const SizedBox(height: 15.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text('Email',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(
-                            width: 230.0,
-                            child: TextField(
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                hintText: 'Email',
-                              ),
-                            ))
-                      ],
-                    ),
+                    const MyTextField(
+                        text: 'Email', hintText: 'Email', obscureText: false),
                     const SizedBox(height: 15.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text('Password',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(
-                            width: 230.0,
-                            child: TextField(
-                              textAlign: TextAlign.center,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                hintText: 'Password',
-                              ),
-                            ))
-                      ],
-                    ),
+                    const MyTextField(
+                        text: 'Password',
+                        hintText: 'Password',
+                        obscureText: true),
                     const SizedBox(height: 15.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text('Password',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(
-                            width: 230.0,
-                            child: TextField(
-                              textAlign: TextAlign.center,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                hintText: 'Password',
-                              ),
-                            ))
-                      ],
-                    ),
+                    const MyTextField(
+                        text: 'Password',
+                        hintText: 'Password',
+                        obscureText: true),
                     const SizedBox(height: 15.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -178,9 +119,21 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 DropdownButton(
-                                  value: 'Month',
+                                  value: 'January',
+                                  hint: const Text('Month'),
                                   items: <String>[
-                                    'Month',
+                                    'January',
+                                    'February',
+                                    'March',
+                                    'April',
+                                    'May',
+                                    'June',
+                                    'July',
+                                    'August',
+                                    'September',
+                                    'October',
+                                    'November',
+                                    'December'
                                   ].map<DropdownMenuItem<String>>(
                                       (String value) {
                                     return DropdownMenuItem<String>(
@@ -190,7 +143,8 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                                       ),
                                     );
                                   }).toList(),
-                                  onChanged: (value) => {},
+                                  // ignore: avoid_print
+                                  onChanged: (value) => print(value),
                                 ),
                                 DropdownButton(
                                   value: 'Day',
@@ -266,9 +220,13 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                       onPressed: () => context.go('/add-avatar'),
                       child: Row(
                         children: const [
-                          Expanded(child: 
-                          Center(child: Text('NEXT')),),
-                          Icon(Icons.arrow_forward_ios,size: 16,)
+                          Expanded(
+                            child: Center(child: Text('NEXT')),
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                          )
                         ],
                       ),
                     )
@@ -283,5 +241,37 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         ],
       ),
     ));
+  }
+}
+
+class MyTextField extends StatelessWidget {
+  final String text;
+  final String hintText;
+  final bool obscureText;
+
+  const MyTextField({
+    super.key,
+    required this.text,
+    required this.hintText,
+    required this.obscureText,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(text, style: const TextStyle(fontWeight: FontWeight.bold)),
+        SizedBox(
+            width: 230.0,
+            child: TextField(
+              textAlign: TextAlign.center,
+              obscureText: obscureText,
+              decoration: InputDecoration(
+                hintText: hintText,
+              ),
+            ))
+      ],
+    );
   }
 }
