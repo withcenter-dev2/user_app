@@ -126,6 +126,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                             width: 230.0,
                             child: TextField(
                               textAlign: TextAlign.center,
+                              obscureText: true,
                               decoration: InputDecoration(
                                 hintText: 'Password',
                               ),
@@ -142,6 +143,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                             width: 230.0,
                             child: TextField(
                               textAlign: TextAlign.center,
+                              obscureText: true,
                               decoration: InputDecoration(
                                 hintText: 'Password',
                               ),
@@ -263,10 +265,10 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                               MaterialStateProperty.all(const Size(200, 50))),
                       onPressed: () => context.go('/add-avatar'),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: const [
-                          Text('Next'),
-                          Icon(Icons.arrow_forward_ios)
+                          Expanded(child: 
+                          Center(child: Text('NEXT')),),
+                          Icon(Icons.arrow_forward_ios,size: 16,)
                         ],
                       ),
                     )
