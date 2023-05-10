@@ -1,8 +1,29 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
-class AddAvatarScreen extends StatelessWidget {
+class AddAvatarScreen extends StatefulWidget {
   const AddAvatarScreen({super.key});
+
+  @override
+  State<AddAvatarScreen> createState() => _AddAvatarScreenState();
+}
+
+class _AddAvatarScreenState extends State<AddAvatarScreen> {
+  XFile? image;
+  final ImagePicker picker = ImagePicker();
+
+  String getAvatarPath() =>
+      image != null ? image!.path : 'assets/images/profile_avatar.png';
+
+  Future getImage(ImageSource media) async {
+    var img = await picker.pickImage(source: media);
+
+    setState(() {
+      image = img;
+    });
+  }
 
   @override
   build(context) {
@@ -92,11 +113,10 @@ class AddAvatarScreen extends StatelessWidget {
                           width: double.infinity,
                           height: 60,
                         ),
-                        const Center(
+                        Center(
                           child: CircleAvatar(
                             radius: 70.0,
-                            backgroundImage:
-                                AssetImage('assets/images/profile_avatar.png'),
+                            backgroundImage: AssetImage(getAvatarPath()),
                           ),
                         ),
                         const SizedBox(
@@ -106,12 +126,21 @@ class AddAvatarScreen extends StatelessWidget {
                           height: 60,
                           width: double.infinity,
                           child: Column(children: [
-                            Text(
-                              'Upload a photo',
-                              style: TextStyle(
-                                  color: Colors.blue.shade800,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap =
+                                          () => {getImage(ImageSource.gallery)},
+                                    text: 'Upload a photo',
+                                    style: TextStyle(
+                                        color: Colors.blue.shade800,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
                             ),
                             const SizedBox(
                               height: 8,
@@ -132,12 +161,21 @@ class AddAvatarScreen extends StatelessWidget {
                           height: 60,
                           width: double.infinity,
                           child: Column(children: [
-                            Text(
-                              'Take a photo',
-                              style: TextStyle(
-                                  color: Colors.blue.shade800,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap =
+                                          () => {getImage(ImageSource.camera)},
+                                    text: 'Take a photo',
+                                    style: TextStyle(
+                                        color: Colors.blue.shade800,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
                             ),
                             const SizedBox(
                               height: 8,
