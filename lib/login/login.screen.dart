@@ -4,14 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart'; //For user authentication
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final email = TextEditingController();
   final password = TextEditingController();
 
@@ -25,17 +25,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Icon(
+              Icons.message_outlined,
+              size: 50,
+              color: Colors.blue,
+            ),
             const SizedBox(
               height: 20.0,
             ),
-            const Center(
-              child: CircleAvatar(
-                radius: 70.0,
-                backgroundImage: AssetImage('assets/images/profile_avatar.png'),
-              ),
-            ),
-            const SizedBox(height: 50.0),
-            const Text('Create an account',
+            const Text('Welcome',
+                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+            const Text('Sign in to continue',
                 style: TextStyle(fontSize: 15, color: Colors.black54)),
             const SizedBox(height: 50.0),
             Padding(
@@ -84,29 +84,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     onPressed: () async {
                       try {
                         final credential = await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
+                            .signInWithEmailAndPassword(
                                 email: email.text, password: password.text);
-                        // ignore: avoid_print
                         log(credential.user.toString());
                         if (mounted) {
                           context.go('/home');
                         }
                       } on FirebaseAuthException catch (e) {
-                        if (e.code == 'email-already-in-use') {
+                        if (e.code == 'user-not-found') {
                           setState(() {
-                            emailErr = 'Email already exist.';
+                            emailErr = 'No user found for this email.';
                           });
                         } else if (e.code == 'invalid-email') {
                           setState(() {
                             emailErr = 'The email you provide is invalid.';
                           });
-                        } else if (e.code == 'weak-password') {
+                        } else if (e.code == 'wrong-password') {
                           setState(() {
-                            passwordErr = 'The password is weak.';
+                            passwordErr =
+                                'Wrong password provided for that email.';
                           });
-                        } else if (e.code == 'operation-not-allowed') {
+                        } else if (e.code == 'user-disabled') {
                           setState(() {
-                            emailErr = 'The user/password is not enabled.';
+                            emailErr = 'The user account is disabled.';
                           });
                         } else {
                           log(e.code);
@@ -119,11 +119,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     style: ButtonStyle(
                         padding: MaterialStateProperty.all<EdgeInsets>(
                             const EdgeInsets.all(15.0))),
-                    child: const Text('SIGN UP'),
+                    child: const Text('LOGIN'),
                   ),
                 ),
                 const SizedBox(
                   height: 20,
+                ),
+                SizedBox(
+                  width: 220.0,
+                  child: ElevatedButton(
+                    onPressed: () => {
+                      //context.go('/create-profile');
+                      context.go('/create-user')
+                    },
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.red.shade400),
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            const EdgeInsets.all(15.0))),
+                    child: const Text('Create an account.'),
+                  ),
                 ),
               ],
             ),
@@ -137,14 +152,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         fontSize: 16,
                         color: Colors.black),
                     children: [
-                  const TextSpan(text: 'Already have an account? Login '),
+                  const TextSpan(text: 'Forgot password? Recover '),
                   TextSpan(
                       text: 'here.',
                       style: const TextStyle(color: Colors.red),
                       recognizer: TapGestureRecognizer()
                         ..onTap =
                             // ignore: avoid_print
-                            () => {context.go('/')}),
+                            () => {print('Go to password recovery page.')}),
                 ]))
           ],
         ),
