@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:user_app/create/addavatar.screen.dart';
 import 'package:user_app/create/createprofile.screen.dart';
+import 'package:firebase_core/firebase_core.dart'; //For connecting to our firebase app
+import 'package:user_app/firebase_options.dart'; //Firebase configuration for selected platform
+import 'package:firebase_auth/firebase_auth.dart'; //For user authentication
 
 final GoRouter _router = GoRouter(routes: [
   GoRoute(path: '/', builder: (context, state) => const LoginScreen()),
@@ -14,7 +17,11 @@ final GoRouter _router = GoRouter(routes: [
       builder: (context, state) => const AddAvatarScreen()),
 ]);
 
-void main() => runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -36,6 +43,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final email = TextEditingController();
+  final password = TextEditingController();
+
+  String emailErr = '';
+  String passwordErr = '';
+
   @override
   build(_) {
     return Scaffold(
@@ -58,21 +71,34 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 50.0),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50.0),
-              child: Column(children: const [
+              child: Column(children: [
                 TextField(
-                  decoration: InputDecoration(
+                  controller: email,
+                  decoration: const InputDecoration(
                       suffixIcon: Icon(Icons.check),
                       suffixIconColor: Colors.orange,
                       hintText: 'xxxx_xx@xxx.com'),
                 ),
-                SizedBox(
+                Text(
+                  emailErr,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.red),
+                ),
+                const SizedBox(
                   height: 20,
                 ),
                 TextField(
-                  decoration: InputDecoration(
+                  controller: password,
+                  obscureText: true,
+                  decoration: const InputDecoration(
                       suffixIcon: Icon(Icons.visibility),
                       suffixIconColor: Colors.black38,
                       hintText: '******'),
+                ),
+                Text(
+                  passwordErr,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.red),
                 ),
               ]),
             ),
@@ -86,7 +112,34 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: 220.0,
                   child: ElevatedButton(
                     // ignore: avoid_print
-                    onPressed: () => {print('Authenticate credentials')},
+                    onPressed: () async {
+                      try {
+                        final credential = await FirebaseAuth.instance
+                            .signInWithEmailAndPassword(
+                                email: email.text, password: password.text);
+                        // ignore: avoid_print
+                        print(credential.user);
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'user-not-found') {
+                          setState(() {
+                            emailErr = 'No user found for this email.';
+                          });
+                        } else if (e.code == 'invalid-email') {
+                          setState(() {
+                            emailErr = 'The email you provide is invalid.';
+                          });
+                        } else if (e.code == 'wrong-password') {
+                          setState(() {
+                            passwordErr =
+                                'Wrong password provided for that email.';
+                          });
+                        } else if (e.code == 'user-disabled') {
+                          setState(() {
+                            emailErr = 'The user account is disabled.';
+                          });
+                        }
+                      }
+                    },
                     style: ButtonStyle(
                         padding: MaterialStateProperty.all<EdgeInsets>(
                             const EdgeInsets.all(15.0))),

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "925401427137",
+    "project_id": "dev2-user-app",
+    "storage_bucket": "dev2-user-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:925401427137:android:737ec4158be36e8a38f840",
+        "android_client_info": {
+          "package_name": "com.example.user_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "925401427137-7m5673q4n8vrr667lib55shus86rd86d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6QUIBCp8X8GYL2TMsXVUkZ7s7DDrDBus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "925401427137-7m5673q4n8vrr667lib55shus86rd86d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
