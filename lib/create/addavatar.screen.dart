@@ -47,7 +47,7 @@ class _AddAvatarScreenState extends State<AddAvatarScreen> {
                 ),
               ),
               InkWell(
-                onTap: () => {context.go('/create')},
+                onTap: () => {context.go('/create-profile')},
                 child: Row(
                   children: const [
                     Icon(

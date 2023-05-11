@@ -1,52 +1,17 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:go_router/go_router.dart';
-import 'package:user_app/create/addavatar.screen.dart';
-import 'package:user_app/create/create.screen.dart';
-import 'package:user_app/create/createprofile.screen.dart';
 import 'dart:developer';
-import 'package:firebase_core/firebase_core.dart'; //For connecting to our firebase app
-import 'package:user_app/firebase_options.dart'; //Firebase configuration for selected platform
 import 'package:firebase_auth/firebase_auth.dart'; //For user authentication
 
-final GoRouter _router = GoRouter(routes: [
-  GoRoute(path: '/', builder: (context, state) => const LoginScreen()),
-  GoRoute(
-      path: '/create-profile',
-      builder: (context, state) => const CreateProfileScreen()),
-  GoRoute(
-      path: '/add-avatar',
-      builder: (context, state) => const AddAvatarScreen()),
-  GoRoute(
-      path: '/create-user', builder: (context, state) => const SignUpScreen())
-]);
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  build(context) {
-    return MaterialApp.router(
-      title: 'User App',
-      routerConfig: _router,
-    );
-  }
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
-
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final email = TextEditingController();
   final password = TextEditingController();
 
@@ -60,17 +25,17 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.message_outlined,
-              size: 50,
-              color: Colors.blue,
-            ),
             const SizedBox(
               height: 20.0,
             ),
-            const Text('Welcome',
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-            const Text('Sign in to continue',
+            const Center(
+              child: CircleAvatar(
+                radius: 70.0,
+                backgroundImage: AssetImage('assets/images/profile_avatar.png'),
+              ),
+            ),
+            const SizedBox(height: 50.0),
+            const Text('Create an account',
                 style: TextStyle(fontSize: 15, color: Colors.black54)),
             const SizedBox(height: 50.0),
             Padding(
@@ -119,27 +84,26 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () async {
                       try {
                         final credential = await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
+                            .createUserWithEmailAndPassword(
                                 email: email.text, password: password.text);
                         // ignore: avoid_print
                         print(credential.user);
                       } on FirebaseAuthException catch (e) {
-                        if (e.code == 'user-not-found') {
+                        if (e.code == 'email-already-in-use') {
                           setState(() {
-                            emailErr = 'No user found for this email.';
+                            emailErr = 'Email already exist.';
                           });
                         } else if (e.code == 'invalid-email') {
                           setState(() {
                             emailErr = 'The email you provide is invalid.';
                           });
-                        } else if (e.code == 'wrong-password') {
+                        } else if (e.code == 'weak-password') {
                           setState(() {
-                            passwordErr =
-                                'Wrong password provided for that email.';
+                            passwordErr = 'The password is weak.';
                           });
-                        } else if (e.code == 'user-disabled') {
+                        } else if (e.code == 'operation-not-allowed') {
                           setState(() {
-                            emailErr = 'The user account is disabled.';
+                            emailErr = 'The user/password is not enabled.';
                           });
                         } else {
                           log(e.code);
@@ -152,26 +116,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: ButtonStyle(
                         padding: MaterialStateProperty.all<EdgeInsets>(
                             const EdgeInsets.all(15.0))),
-                    child: const Text('LOGIN'),
+                    child: const Text('SIGN UP'),
                   ),
                 ),
                 const SizedBox(
                   height: 20,
-                ),
-                SizedBox(
-                  width: 220.0,
-                  child: ElevatedButton(
-                    onPressed: () => {
-                      //context.go('/create-profile');
-                      context.go('/create-user')
-                    },
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Colors.red.shade400),
-                        padding: MaterialStateProperty.all<EdgeInsets>(
-                            const EdgeInsets.all(15.0))),
-                    child: const Text('Create an account.'),
-                  ),
                 ),
               ],
             ),
@@ -185,14 +134,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontSize: 16,
                         color: Colors.black),
                     children: [
-                  const TextSpan(text: 'Forgot password? Recover '),
+                  const TextSpan(text: 'Already have an account? Login '),
                   TextSpan(
                       text: 'here.',
                       style: const TextStyle(color: Colors.red),
                       recognizer: TapGestureRecognizer()
                         ..onTap =
                             // ignore: avoid_print
-                            () => {print('Go to password recovery page.')}),
+                            () => {context.go('/')}),
                 ]))
           ],
         ),
