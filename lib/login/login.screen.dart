@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:go_router/go_router.dart';
 import 'package:user_app/view-model/auth.view_model.dart';
+import 'package:user_app/widgets/password.textfield.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -62,14 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                TextField(
-                  controller: password,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                      suffixIcon: Icon(Icons.visibility),
-                      suffixIconColor: Colors.black38,
-                      hintText: '******'),
-                ),
+                PasswordTextField(password: password),
                 Text(
                   passwordErr,
                   textAlign: TextAlign.center,
