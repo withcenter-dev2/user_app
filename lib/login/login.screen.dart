@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:developer';
-import 'package:firebase_auth/firebase_auth.dart'; //For user authentication
+import 'package:user_app/view-model/auth.view_model.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,6 +16,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String emailErr = '';
   String passwordErr = '';
+
+  late AuthViewModel auth =
+      AuthViewModel(email: email.text, password: password.text);
 
   @override
   build(_) {
@@ -80,41 +82,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   width: 220.0,
                   child: ElevatedButton(
-                    // ignore: avoid_print
-                    onPressed: () async {
-                      try {
-                        final credential = await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
-                                email: email.text, password: password.text);
-                        log(credential.user.toString());
-                        if (mounted) {
-                          context.go('/home');
-                        }
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'user-not-found') {
-                          setState(() {
-                            emailErr = 'No user found for this email.';
-                          });
-                        } else if (e.code == 'invalid-email') {
-                          setState(() {
-                            emailErr = 'The email you provide is invalid.';
-                          });
-                        } else if (e.code == 'wrong-password') {
-                          setState(() {
-                            passwordErr =
-                                'Wrong password provided for that email.';
-                          });
-                        } else if (e.code == 'user-disabled') {
-                          setState(() {
-                            emailErr = 'The user account is disabled.';
-                          });
-                        } else {
-                          log(e.code);
-                          log(e.message.toString());
-                        }
-                      } catch (e) {
-                        log(e.toString());
-                      }
+                    onPressed: () {
+                      auth = AuthViewModel(
+                          email: email.text, password: password.text);
+                      auth.login();
                     },
                     style: ButtonStyle(
                         padding: MaterialStateProperty.all<EdgeInsets>(

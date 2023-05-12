@@ -35,19 +35,21 @@ class HomeScreenState extends State {
                     ],
                     if (user == null) ...[
                       RichText(
-                          text: TextSpan(
-                              style: const TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                              children: [
+                        text: TextSpan(
+                          style: const TextStyle(
+                              color: Colors.black54,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                          children: [
                             const TextSpan(text: 'Please login first '),
                             TextSpan(
                                 text: 'here.',
                                 style: const TextStyle(color: Colors.red),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () => {context.go('/')})
-                          ]))
+                          ],
+                        ),
+                      )
                     ]
                   ],
                 ),
