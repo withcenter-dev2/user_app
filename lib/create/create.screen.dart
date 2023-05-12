@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:developer';
-import 'package:firebase_auth/firebase_auth.dart'; //For user authentication
+import 'package:user_app/view-model/auth.view_model.dart'; //For user authentication
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -17,6 +16,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   String emailErr = '';
   String passwordErr = '';
+
+  late AuthViewModel auth =
+      AuthViewModel(email: email.text, password: password.text);
 
   @override
   build(_) {
@@ -81,40 +83,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   width: 220.0,
                   child: ElevatedButton(
                     // ignore: avoid_print
-                    onPressed: () async {
-                      try {
-                        final credential = await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                                email: email.text, password: password.text);
-                        // ignore: avoid_print
-                        log(credential.user.toString());
-                        if (mounted) {
-                          context.go('/home');
-                        }
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'email-already-in-use') {
-                          setState(() {
-                            emailErr = 'Email already exist.';
-                          });
-                        } else if (e.code == 'invalid-email') {
-                          setState(() {
-                            emailErr = 'The email you provide is invalid.';
-                          });
-                        } else if (e.code == 'weak-password') {
-                          setState(() {
-                            passwordErr = 'The password is weak.';
-                          });
-                        } else if (e.code == 'operation-not-allowed') {
-                          setState(() {
-                            emailErr = 'The user/password is not enabled.';
-                          });
-                        } else {
-                          log(e.code);
-                          log(e.message.toString());
-                        }
-                      } catch (e) {
-                        log(e.toString());
-                      }
+                    onPressed: () {
+                      auth = AuthViewModel(
+                          email: email.text, password: password.text);
+                      auth.register();
                     },
                     style: ButtonStyle(
                         padding: MaterialStateProperty.all<EdgeInsets>(

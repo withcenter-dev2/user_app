@@ -32,4 +32,28 @@ class AuthViewModel {
       log(e.toString());
     }
   }
+
+  register() async {
+    try {
+      final credential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      // ignore: avoid_print
+      log(credential.user.toString());
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        emailErr = 'Email already exist.';
+      } else if (e.code == 'invalid-email') {
+        emailErr = 'The email you provide is invalid.';
+      } else if (e.code == 'weak-password') {
+        passwordErr = 'The password is weak.';
+      } else if (e.code == 'operation-not-allowed') {
+        emailErr = 'The user/password is not enabled.';
+      } else {
+        log(e.code);
+        log(e.message.toString());
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 }
