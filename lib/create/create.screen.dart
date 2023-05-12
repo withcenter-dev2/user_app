@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:go_router/go_router.dart';
 import 'package:user_app/view-model/auth.view_model.dart';
+import 'package:user_app/widgets/email.textfield.dart';
 import 'package:user_app/widgets/password.textfield.dart'; //For user authentication
 
 class SignUpScreen extends StatefulWidget {
@@ -48,13 +49,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50.0),
               child: Column(children: [
-                TextField(
-                  controller: email,
-                  decoration: const InputDecoration(
-                      suffixIcon: Icon(Icons.check),
-                      suffixIconColor: Colors.orange,
-                      hintText: 'xxxx_xx@xxx.com'),
-                ),
+                EmailTextField(email: email),
                 Text(
                   emailErr,
                   textAlign: TextAlign.center,
