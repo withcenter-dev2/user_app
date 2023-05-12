@@ -17,8 +17,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String emailErr = '';
   String passwordErr = '';
 
-  late AuthViewModel auth =
-      AuthViewModel(email: email.text, password: password.text);
+  late AuthViewModel auth = AuthViewModel(
+      email: email.text,
+      password: password.text,
+      goToHome: () => {context.go('/home')},
+      setEmailError: () => {},
+      setPasswordError: () => {});
 
   @override
   build(_) {
@@ -85,7 +89,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     // ignore: avoid_print
                     onPressed: () {
                       auth = AuthViewModel(
-                          email: email.text, password: password.text);
+                          email: email.text,
+                          password: password.text,
+                          goToHome: () => {context.go('/home')},
+                          setEmailError: (error) =>
+                              {setState(() => emailErr = error)},
+                          setPasswordError: (error) =>
+                              {setState(() => passwordErr = error)});
                       auth.register();
                     },
                     style: ButtonStyle(

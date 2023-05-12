@@ -4,17 +4,26 @@ import 'dart:developer';
 class AuthViewModel {
   final String email;
   final String password;
+  final Function goToHome;
+  final Function setEmailError;
+  final Function setPasswordError;
 
   String emailErr = '';
   String passwordErr = '';
 
-  AuthViewModel({required this.email, required this.password});
+  AuthViewModel(
+      {required this.email,
+      required this.password,
+      required this.goToHome,
+      required this.setEmailError,
+      required this.setPasswordError});
 
   login() async {
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       log(credential.user.toString());
+      goToHome();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         emailErr = 'No user found for this email.';
@@ -28,6 +37,8 @@ class AuthViewModel {
         log(e.code);
         log(e.message.toString());
       }
+      setEmailError(emailErr);
+      setPasswordError(passwordErr);
     } catch (e) {
       log(e.toString());
     }
@@ -39,6 +50,7 @@ class AuthViewModel {
           .createUserWithEmailAndPassword(email: email, password: password);
       // ignore: avoid_print
       log(credential.user.toString());
+      goToHome();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         emailErr = 'Email already exist.';
@@ -52,6 +64,8 @@ class AuthViewModel {
         log(e.code);
         log(e.message.toString());
       }
+      setEmailError(emailErr);
+      setPasswordError(passwordErr);
     } catch (e) {
       log(e.toString());
     }
